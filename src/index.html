@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>01b RayTracing: LineGrid</title>
+	</head>
+	<body onload="main()" onresize="browserResize()">
+		<canvas id="webgl" width="512" height="512" style="top:0px;position:absolute;"></canvas>
+		<canvas id="raytracing" width="512" height="512" style="position:absolute; margin-left: 512px;top: 0px;"></canvas>
+		<!-- Please use a browser that supports "canvas" -->
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../lib/materials_Ayerdi.js"></script>
+		<script src="../lib/webgl-utils.js"></script>
+		<script src="../lib/webgl-debug.js"></script>
+		<script src="../lib/cuon-utils.js"></script>
+		<script src="../lib/cuon-matrix-quat.js"></script> <!-- JT modified to add quaternions -->
+		<script src="../lib/glMatrix.js"></script> <!-- SEE: http://glmatrix.net/ fast vector/matrix lib for webGL  -->
+
+		<script src="CRay.js"></script>
+		<script src="CHit.js"></script>
+		<script src="CCamera.js"></script>
+		<script src="CGeom.js"></script>
+		<script src="CImageBuf.js"></script>
+		<script src="CMatl.js"></script>
+		<script src="CLight.js"></script>
+		<script src="CScene.js"></script>
+		<script src="canvas.js"></script>
+		<script src="util.js"></script>
+
+		<div id="lighting_panel" style="position: absolute;top: 512px;">
+			lamp 0 position
+			<input type="text" id="lamp0_pos_x">
+			<input type="text" id="lamp0_pos_y">
+			<input type="text" id="lamp0_pos_z">
+			<button type="button" onclick="switchLamp0()">Lamp0 on/off</button><br />
+			lamp 1 position
+			<input type="text" id="lamp1_pos_x">
+			<input type="text" id="lamp1_pos_y">
+			<input type="text" id="lamp1_pos_z">
+			<button type="button" onclick="switchLamp1()">Lamp1 on/off</button><br />
+
+			<button type="button" onclick="isAAenable()">AA enable</button>
+			<button type="button" onclick="isAAdisable()">AA disable</button>
+			<button type="button" onclick="startRT()">Start Ray Tracing</button><br />
+			<button type="button" onclick="changeScene()">Change Scene</button><br />
+			<button type="button" onclick="decreaseDepth()">Depth --</button>
+			<button type="button" onclick="increaseDepth()">Depth ++</button>
+		</div>
+	</body>
+</html>
