@@ -5,12 +5,12 @@
 //					"WebGL Programming Guide" pg. 163
 // became:
 //
-//	traceWeek01_LineGrid.js 	MODIFIED for EECS 351-1, 
+//	traceWeek01_LineGrid.js 	MODIFIED for EECS 351-1,
 //																	Northwestern Univ. Jack Tumblin
 //	--add comments
-//	--two side-by-side viewports: 
+//	--two side-by-side viewports:
 //			LEFT:	--3D line-drawing preview
-//			RIGHT:--texture-map from a Uint8Array object.  
+//			RIGHT:--texture-map from a Uint8Array object.
 //							(NOTE: Not all versions of WebGL can read the Float32Array
 //							(made by our ray-tracer; convert it to 8-bit integer
 //							(by rounding: intRGB = floatRGB*255.5
@@ -120,7 +120,7 @@ var u_isTextureID = 0;			  // GPU location of this uniform var
 // Global vars for mouse click-and-drag for rotation.
 var isDrag=false;		// mouse-drag: true when user holds down mouse button
 var xMclik=0.0;			// last mouse button-down position (in CVV coords)
-var yMclik=0.0;   
+var yMclik=0.0;
 var xMdragTot=0.0;	// total (accumulated) mouse-drag amounts (in CVV coords).
 var yMdragTot=0.0;
 
@@ -151,7 +151,7 @@ var lamp1Attr = {
 
 //-----------Ray Tracer Objects:
 var myScene;											// containing CScene object
-var myPic = new CImgBuf(256,256);	// create RGB image buffer object, and
+var myPic = new ImageBuffer(256,256);	// create RGB image buffer object, and
 var currentScene = 0;							// 0: 3 spheres, 1: sph, cyl, box, (cone)
 
 //==============================================================================
@@ -163,8 +163,8 @@ function main2() {
 	// Retrieve <canvas> element
 	var canvas = document.getElementById('raytracing');
 
-	// browserResize();			// Re-size this canvas before we use it. 
-	// (ignore the size settings from our HTML file; fill all but a 20-pixel 
+	// browserResize();			// Re-size this canvas before we use it.
+	// (ignore the size settings from our HTML file; fill all but a 20-pixel
 	// border with a canvas whose width is twice its height.)
 	// Get the rendering context for WebGL
 
@@ -195,17 +195,17 @@ function main2() {
 	}
 
 	// Register the Mouse & Keyboard Event-handlers-------------------------------
-	canvas.onmousedown	=	function(ev){myMouseDown( ev, gl, canvas) }; 
+	canvas.onmousedown	=	function(ev){myMouseDown( ev, gl, canvas) };
 	canvas.onmousemove = 	function(ev){myMouseMove( ev, gl, canvas) };
 	canvas.onmouseup = 		function(ev){myMouseUp(   ev, gl, canvas)};
-						
+
 	// Next, register all keyboard events found within our HTML webpage window:
 	window.addEventListener("keydown", myKeyDown, false);
 	window.addEventListener("keyup", myKeyUp, false);
 	window.addEventListener("keypress", myKeyPress, false);
 
 	// Specify how we will clear the WebGL context in <canvas>
-	gl.clearColor(0.0, 0.0, 0.0, 1.0);				
+	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	// gl.enable(gl.DEPTH_TEST); // CAREFUL! don't do depth tests for 2D!
 
 	// Create, load, enable texture buffer object (TBO) in graphics hardware
@@ -218,19 +218,19 @@ function main2() {
 }
 
 //=============================================================================
-// make sure that the fast vector/matrix library we use is available and works 
-// properly. My search for 'webGL vector matrix library' found the GitHub 
-// project glMatrix is intended for WebGL use, and is very fast, open source 
+// make sure that the fast vector/matrix library we use is available and works
+// properly. My search for 'webGL vector matrix library' found the GitHub
+// project glMatrix is intended for WebGL use, and is very fast, open source
 // and well respected.		 	SEE:       http://glmatrix.net/
-// 			NOTE: cuon-matrix.js library (supplied with our textbook: "WebGL 
-// Programming Guide") duplicates some of the glMatrix.js functions. For 
-// example, the glMatrix.js function 		mat4.lookAt() 		is a work-alike 
+// 			NOTE: cuon-matrix.js library (supplied with our textbook: "WebGL
+// Programming Guide") duplicates some of the glMatrix.js functions. For
+// example, the glMatrix.js function 		mat4.lookAt() 		is a work-alike
 //	 for the cuon-matrix.js function 		Matrix4.setLookAt().
 function test_glMatrix() {
 
 	myV4 = vec4.fromValues(1,8,4,7);				// create a 4-vector
 	console.log(' myV4 = '+myV4+'\n myV4[0] = '+myV4[0]+'\n myV4[1] = '+myV4[1]+'\n myV4[2] = '+myV4[2]+'\n myV4[3] = '+myV4[3]+'\n\n');
-	
+
 	myM4 = mat4.create();							// create a 4x4 matrix
 	console.log('mat4.str(myM4) = '+mat4.str(myM4)+'\n' );
 	// Which is it? print out row[0], row[1], row[2], row[3],
@@ -248,7 +248,7 @@ function test_glMatrix() {
 	console.log(
 	' myM4 row2=[ '+myM4[0]+', '+myM4[1]+', '+myM4[2]+', '+myM4[3]+' ]\n');
 		console.log(
-	' myM4 row3=[ '+myM4[0]+', '+myM4[1]+', '+myM4[2]+', '+myM4[3]+' ]\n');				
+	' myM4 row3=[ '+myM4[0]+', '+myM4[1]+', '+myM4[2]+', '+myM4[3]+' ]\n');
 }
 
 //==============================================================================
@@ -270,9 +270,9 @@ function initVertexBuffers(gl) {
 		return -1;
 	}
 
-	// Bind the this vertex buffer object to target (ARRAY_BUFFER).  
+	// Bind the this vertex buffer object to target (ARRAY_BUFFER).
 	// (Why 'ARRAY_BUFFER'? Because our array holds vertex attribute values.
-	//	Our only other target choice: 'ELEMENT_ARRAY_BUFFER' for an array that 
+	//	Our only other target choice: 'ELEMENT_ARRAY_BUFFER' for an array that
 	// holds indices into another array that holds vertex attribute values.)
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertexTexCoordBufferID);
 	gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW);
@@ -296,7 +296,7 @@ function initVertexBuffers(gl) {
 	// Assign the buffer object to a_TexCoord variable
 	gl.vertexAttribPointer(a_TexCoordID, 2, gl.FLOAT, false, FSIZE*4, FSIZE*2);
 	// Enable the assignment of the buffer object
-	gl.enableVertexAttribArray(a_TexCoordID);  
+	gl.enableVertexAttribArray(a_TexCoordID);
 	return n;
 }
 
@@ -305,7 +305,7 @@ function initVertexBuffers(gl) {
 // for our Fragment Shader.
 function initTextures(gl, n) {
 
-	var textureID = gl.createTexture();   // Get GPU location for new texture map 
+	var textureID = gl.createTexture();   // Get GPU location for new texture map
 	if (!textureID) {
 		console.log('Failed to create the texture object on the GPU');
 		return false;
@@ -317,11 +317,11 @@ function initTextures(gl, n) {
 		console.log('Failed to get the GPU location of u_Sampler');
 		return false;
 	}
-	
+
 	myPic.setTestPattern(0);				// fill it with an initial test-pattern.
 	// 																// 0 == colorful L-shaped pattern
 	// 																// 1 == uniform orange screen
-	
+
 	// Enable texture unit0 for our use
 	gl.activeTexture(gl.TEXTURE0);
 	// Bind our texture object (made at start of this fcn) to GPU's texture hdwe.
@@ -334,9 +334,9 @@ function initTextures(gl, n) {
 								myPic.ySiz,				// image height in pixels,
 								0,								// byte offset to start of data
 								gl.RGB, 					// source/input data format (RGB? RGBA?)
-								gl.UNSIGNED_BYTE, // data type for each color channel				
+								gl.UNSIGNED_BYTE, // data type for each color channel
 								myPic.iBuf);			// data source.
-								
+
 	// Set the WebGL texture-filtering parameters
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	// Set the texture unit 0 to be driven by the sampler
@@ -346,7 +346,7 @@ function initTextures(gl, n) {
 
 //==============================================================================
 // Modify/update the contents of the texture map(s) stored in the GPU;
-// copy current contents of CImgBuf object 'myPic'  (see initTextures() above)
+// copy current contents of ImageBuffer object 'myPic'  (see initTextures() above)
 // into the existing texture-map object stored in the GPU:
 function refreshTextures(gl) {
 
@@ -356,7 +356,7 @@ function refreshTextures(gl) {
 									 myPic.xSiz,				// image width in pixels,
 									 myPic.ySiz,				// image height in pixels,
 									 gl.RGB, 						// source/input data format (RGB? RGBA?)
-									 gl.UNSIGNED_BYTE, 	// data type for each color channel				
+									 gl.UNSIGNED_BYTE, 	// data type for each color channel
 									 myPic.iBuf);				// data source.
 }
 
@@ -601,11 +601,11 @@ function drawAll(gl, nV) {
 // Called when user re-sizes their browser window , because our HTML file
 // contains:  <body onload="main()" onresize="browserResize()">
 function browserResize() {
-	/* SOLUTION to a pesky problem: 
-	The main() function retrieves our WebGL drawing context as the variable 'gl', 
-	then shares it as an argument to other functions.  
+	/* SOLUTION to a pesky problem:
+	The main() function retrieves our WebGL drawing context as the variable 'gl',
+	then shares it as an argument to other functions.
 	That's not enough!
-	How can we access the 'gl' canvas within functions that main() will NEVER call, 
+	How can we access the 'gl' canvas within functions that main() will NEVER call,
 	such as the mouse and keyboard-handling functions, or winResize()? \
 	Easy! make our own local references to the current canvas and WebGL drawing
 	context, like this: */
@@ -617,7 +617,7 @@ function browserResize() {
 	console.log('myCanvas width,height=', myCanvas.width, myCanvas.height);
 	console.log('Browser window: innerWidth,innerHeight=',
 																innerWidth, innerHeight);	// http://www.w3schools.com/jsref/obj_window.asp
-	
+
 	//Make a square canvas/CVV fill the SMALLER of the width/2 or height:
 	if(innerWidth > 2*innerHeight) {  // fit to brower-window height
 		myCanvas.width = 2*innerHeight-20;
@@ -625,8 +625,8 @@ function browserResize() {
 	} else {	// fit canvas to browser-window width
 		myCanvas.width = innerWidth-20;
 		myCanvas.height = 0.5*innerWidth-20;
-	}	 
-	console.log('NEW myCanvas width,height=', myCanvas.width, myCanvas.height);		
+	}
+	console.log('NEW myCanvas width,height=', myCanvas.width, myCanvas.height);
 }
 
 
@@ -642,8 +642,8 @@ function browserResize() {
 //==============================================================================
 // Called when user PRESSES down any mouse button;
 // 									(Which button?    console.log('ev.button='+ev.button);   )
-// 		ev.clientX, ev.clientY == mouse pointer location, but measured in webpage 
-//		pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)  
+// 		ev.clientX, ev.clientY == mouse pointer location, but measured in webpage
+//		pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)
 function myMouseDown(ev, gl, canvas) {
 
 	// Create right-handed 'pixel' coords with origin at WebGL canvas LOWER left;
@@ -651,15 +651,15 @@ function myMouseDown(ev, gl, canvas) {
 	var xp = ev.clientX - rect.left;									// x==0 at canvas left edge
 	var yp = canvas.height - (ev.clientY - rect.top);	// y==0 at canvas bottom edge
 	// console.log('myMouseDown(pixel coords): xp,yp=\t',xp,',\t',yp);
-	
+
 	// Convert to Canonical View Volume (CVV) coordinates too:
-	// MODIFIED for side-by-side display: find position within the LEFT-side CVV 
+	// MODIFIED for side-by-side display: find position within the LEFT-side CVV
 	var x = (xp - canvas.width/4)  / 		// move origin to center of LEFT viewport,
 							 (canvas.width/4);			// normalize canvas to -1 <= x < +1,
 	var y = (yp - canvas.height/2) /		//										 -1 <= y < +1.
 							 (canvas.height/2);
 	// console.log('myMouseDown(CVV coords  ):  x, y=\t',x,',\t',y);
-	
+
 	isDrag = true;											// set our mouse-dragging flag
 	xMclik = x;													// record where mouse-dragging began
 	yMclik = y;
@@ -669,8 +669,8 @@ function myMouseDown(ev, gl, canvas) {
 //==============================================================================
 // Called when user MOVES the mouse with a button already pressed down.
 // 									(Which button?   console.log('ev.button='+ev.button);    )
-// 		ev.clientX, ev.clientY == mouse pointer location, but measured in webpage 
-//		pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)  
+// 		ev.clientX, ev.clientY == mouse pointer location, but measured in webpage
+//		pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)
 function myMouseMove(ev, gl, canvas) {
 
 	if(isDrag==false) return;				// IGNORE all mouse-moves except 'dragging'
@@ -680,10 +680,10 @@ function myMouseMove(ev, gl, canvas) {
 	var xp = ev.clientX - rect.left;									// x==0 at canvas left edge
 	var yp = canvas.height - (ev.clientY - rect.top);	// y==0 at canvas bottom edge
 	// console.log('myMouseMove(pixel coords): xp,yp=\t',xp,',\t',yp);
-	
+
 	// Convert to Canonical View Volume (CVV) coordinates too:
-	// MODIFIED for side-by-side display: find position within the LEFT-side CVV 
-	var x = (xp - canvas.width/4)  / 		// move origin to center of LEFT viewport, 
+	// MODIFIED for side-by-side display: find position within the LEFT-side CVV
+	var x = (xp - canvas.width/4)  / 		// move origin to center of LEFT viewport,
 							 (canvas.width/4);			// normalize canvas to -1 <= x < +1,
 	var y = (yp - canvas.height/2) /		//										 -1 <= y < +1.
 							 (canvas.height/2);
@@ -699,23 +699,23 @@ function myMouseMove(ev, gl, canvas) {
 //==============================================================================
 // Called when user RELEASES mouse button pressed previously.
 // 									(Which button?   console.log('ev.button='+ev.button);    )
-// 		ev.clientX, ev.clientY == mouse pointer location, but measured in webpage 
-//		pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)  
+// 		ev.clientX, ev.clientY == mouse pointer location, but measured in webpage
+//		pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)
 function myMouseUp(ev, gl, canvas) {
 	// Create right-handed 'pixel' coords with origin at WebGL canvas LOWER left;
 	var rect = ev.target.getBoundingClientRect();	// get canvas corners in pixels
 	var xp = ev.clientX - rect.left;									// x==0 at canvas left edge
 	var yp = canvas.height - (ev.clientY - rect.top);	// y==0 at canvas bottom edge
 	//  console.log('myMouseUp  (pixel coords): xp,yp=\t',xp,',\t',yp);
-	
+
 	// Convert to Canonical View Volume (CVV) coordinates too:
-	// MODIFIED for side-by-side display: find position within the LEFT-side CVV 
+	// MODIFIED for side-by-side display: find position within the LEFT-side CVV
 	var x = (xp - canvas.width/4)  / 		// move origin to center of LEFT viewport,
 							 (canvas.width/4);			// normalize canvas to -1 <= x < +1,
 	var y = (yp - canvas.height/2) /		//										 -1 <= y < +1.
 							 (canvas.height/2);
 	console.log('myMouseUp  (CVV coords  ):  x, y=\t',x,',\t',y);
-	
+
 	isDrag = false;											// CLEAR our mouse-dragging flag, and
 	// accumulate any final bit of mouse-dragging we did:
 	xMdragTot += (x - xMclik);
@@ -724,14 +724,14 @@ function myMouseUp(ev, gl, canvas) {
 };
 
 //===============================================================================
-// Called when user presses down ANY key on the keyboard, and captures the 
+// Called when user presses down ANY key on the keyboard, and captures the
 // keyboard's scancode or keycode(varies for different countries and alphabets).
-//  CAUTION: You may wish to avoid 'keydown' and 'keyup' events: if you DON'T 
-// need to sense non-ASCII keys (arrow keys, function keys, pgUp, pgDn, Ins, 
+//  CAUTION: You may wish to avoid 'keydown' and 'keyup' events: if you DON'T
+// need to sense non-ASCII keys (arrow keys, function keys, pgUp, pgDn, Ins,
 // Del, etc), then just use the 'keypress' event instead.
 //	 The 'keypress' event captures the combined effects of alphanumeric keys and
 // the SHIFT, ALT, and CTRL modifiers.  It translates pressed keys into ordinary
-// UniCode or ASCII codes; you'll get the ASCII code for uppercase 'S' if you 
+// UniCode or ASCII codes; you'll get the ASCII code for uppercase 'S' if you
 // hold shift and press the 's' key.
 // For a light, easy explanation of keyboard events in JavaScript,
 // see:    http://www.kirupa.com/html5/keyboard_events_in_javascript.htm
@@ -739,7 +739,7 @@ function myMouseUp(ev, gl, canvas) {
 // see:    http://javascript.info/tutorial/keyboard-events
 function myKeyDown(ev) {
 
-	// switch(ev.keyCode) {			// keycodes !=ASCII, but are very consistent for 
+	// switch(ev.keyCode) {			// keycodes !=ASCII, but are very consistent for
 	// //	nearly all non-alphanumeric keys for nearly all keyboards in all countries.
 	// 	case 37:		// left-arrow key
 	// 		// print in console:
@@ -781,7 +781,7 @@ function myKeyUp(ev) {
 }
 
 //===============================================================================
-// Best for capturing alphanumeric keys and key-combinations such as 
+// Best for capturing alphanumeric keys and key-combinations such as
 // CTRL-C, alt-F, SHIFT-4, etc.
 //===============================================================================
 // keyboard input event-listener callbacks
@@ -956,6 +956,3 @@ function increaseDepth() {
 	if(reflDepth<3)
 		reflDepth++;
 }
-
-
-

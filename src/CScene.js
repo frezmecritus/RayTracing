@@ -1,13 +1,13 @@
 //==============================================================================
 // A complete ray tracer object prototype (formerly a C/C++ 'class').
-//      My code uses just one CScene instance (myScene) to describe the entire 
+//      My code uses just one CScene instance (myScene) to describe the entire
 //			ray tracer.  Note that I could add more CScene variables to make multiple
 //			ray tracers (perhaps on different threads or processors) and combine
 //			their results into a video sequence, a giant image, or use one result
 //			to help create another.
 //
 //The CScene class includes:
-// One CImgBuf object that holds a floating-point RGB image, and uses that
+// One ImageBuffer object that holds a floating-point RGB image, and uses that
 //		  image to create a corresponding 8,8,8 bit RGB image suitable for WebGL
 //			display as a texture-map in an HTML-5 canvas object within a webpage.
 // One CCamera object that describes an antialiased ray-tracing camera;
@@ -22,10 +22,10 @@
 //      ray, and keeps track of which hit-point is closest to the camera. That
 //			collection is held in the eyeHits member of the CScene class.
 // a COLLECTION of CGeom objects that each describe an individual visible thing,
-//      single item or thing we may see in the scene.  That collection is the 
+//      single item or thing we may see in the scene.  That collection is the
 //			held in the 'item[]' array within the CScene class.
 //      Each CGeom element in the 'item[]' array holds one shape on-screen.
-//      To see three spheres and a ground-plane we'll have 4 CGeom objects, one 
+//      To see three spheres and a ground-plane we'll have 4 CGeom objects, one
 //			for each of the spheres, and one for the ground-plane.
 //      Each CGeom object includes a 'matlIndex' index number that selects which
 //      material to use in rendering the CGeom shape. I assume all lights in the
@@ -39,14 +39,14 @@
 //      Phong-shaded brass-metal material, another for a texture-map, another
 //      for a bump mapped material for the surface of an orange (fruit),
 //      another for a marble-like material defined by Perlin noise, etc.
-// a COLLECTION of CLight objects that each describe one light source.  
+// a COLLECTION of CLight objects that each describe one light source.
 //			That collection is held in the 'lamp[]' array within the CScene class.
 //      Note that I apply all lights to all CGeom objects.  You may wish to
 //      add an index to the CGeom class to select which lights affect each item.
 //
 // The default CScene constructor creates a simple scene that will create a
 // picture if traced:
-// --rayCam with +/- 45 degree Horiz field of view, aimed at the origin from 
+// --rayCam with +/- 45 degree Horiz field of view, aimed at the origin from
 // 			world-space location (0,0,5)
 // --item[0] is a unit sphere at the origin that uses matter[0] material;
 // --matter[0] material is a shiny red Phong-lit material, lit by lamp[0];
@@ -120,11 +120,11 @@ CScene.prototype.makeRayTracedImage = function(destPic, scanCount) {
 	if(this.isAA == false) { // ***NO*** antialiasing...
 		var ubegin = this.rayCam.iLeft + 0.5*ustep;  // start at lower-left corner PLUS
 		var vbegin = this.rayCam.iBot + 0.5*vstep;   // a half-tile width, height.
-			
+
 		for(var j=0; j< destPic.ySiz; j++) {	// for each row of the image,
 			for(var i=0; i<destPic.xSiz; i++) {	// for each column of the image,
 				var idx = (j*destPic.xSiz + i)*destPic.pixSiz;		// Array index at pixel (i,j)
-				
+
 				var xray = ubegin + i*ustep;    // find ray thru center of
 				var yray = vbegin + j*vstep;    // each pixel's 'little square'
 				this.rayCam.setEyeRay(this.eyeRay,xray,yray);
@@ -152,7 +152,7 @@ CScene.prototype.makeRayTracedImage = function(destPic, scanCount) {
 			for(var i=0; i<destPic.xSiz; i++) {	// For each pixel,
 				var idx = (j*destPic.xSiz + i)*destPic.pixSiz;		// Array index at pixel (i,j)
 				var colrAcc = vec4.create();         // clear the color accumulator
-				
+
 				for(var jj=0; jj<this.ySuperAA; jj++) {			// for each row of tiles in the pixel
 					for(var ii=0; ii<this.xSuperAA; ii++) {		// for each column of tiles ...
 						// find the corner of the super-sampling 'little tile'
@@ -192,7 +192,7 @@ CScene.prototype.trace = function(pRay, pList, depth) {
 	pList.initList(this.bkgndColr);						// wipe any previous contents.
 	for(var i=0; i<this.itemCount; i++) {	// For every item in our scene,
 		if(i==1 && pList.isShadowRay==true)
-		// if( (pRay.orig[0]-0.0)*(pRay.orig[0]-0.0) + (pRay.orig[1]-0.0)*(pRay.orig[1]-0.0) <1) 
+		// if( (pRay.orig[0]-0.0)*(pRay.orig[0]-0.0) + (pRay.orig[1]-0.0)*(pRay.orig[1]-0.0) <1)
 			var a = 1;
 		switch(this.items[i].shapeType) {				// trace ray to find all intersections
 			case GEOM_GNDPLANE:
@@ -288,7 +288,7 @@ CScene.prototype.findShade = function(pList, hitNum, depth) {
 				{   // line color== matlB, secondary color.
 						var blend = 0.0;
 				}
-				else 
+				else
 					var blend = 1.0;   // background color; primary color.
 			break;
 			case SOLID_CHECKERBOARD: // 3D checkerboard; size xgap,ygap,zgap
@@ -345,8 +345,8 @@ CScene.prototype.findShade = function(pList, hitNum, depth) {
 				var h = vec4.sub(vec4.create(), s, vec4.scale(vec4.create(), pHit.viewN, 0.5));
 				vec4.normalize(h,h);
 				var mDotH = vec4.dot(h, pHit.surfNorm);
-				var spc = vec4.mul(vec4.create(), 
-				                   myMatl.K_spec, 
+				var spc = vec4.mul(vec4.create(),
+				                   myMatl.K_spec,
 				                   vec4.scale(vec4.create(), l.I_s, Math.pow(Math.max(0,mDotH), myMatl.K_shiny)));
 				vec4.add(pHit.colr, pHit.colr, spc);
 
@@ -354,7 +354,7 @@ CScene.prototype.findShade = function(pList, hitNum, depth) {
 
 				if(this.matter[Astuff].K_shiny > 80) { // shiny_enough
 					var amount = 2*vec4.dot(pHit.viewN, pHit.surfNorm);
-					var rayDir = vec4.sub(vec4.create(), 
+					var rayDir = vec4.sub(vec4.create(),
 					                      vec4.scale(vec4.create(), pHit.surfNorm, amount),
 					                      pHit.viewN); // dir = -pHit.viewN => r = dir - 2*(dir dot N)N
 					hList = new CHitList();
@@ -392,4 +392,3 @@ CScene.prototype.findShade = function(pList, hitNum, depth) {
 	bool destroyLight(int xlamp);   // At index 'xlamp', set isAlive=false.
 									// return false if xlamp doesn't exist.
 */
-
