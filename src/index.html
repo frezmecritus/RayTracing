@@ -3,20 +3,20 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>01b RayTracing: LineGrid</title>
-	</head>
-	<body onload="main()" onresize="browserResize()">
-		<canvas id="webgl" width="512" height="512" style="top:0px;position:absolute;"></canvas>
-		<canvas id="raytracing" width="512" height="512" style="position:absolute; margin-left: 512px;top: 0px;"></canvas>
-		<!-- Please use a browser that supports "canvas" -->
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="../lib/materials_Ayerdi.js"></script>
 		<script src="../lib/webgl-utils.js"></script>
 		<script src="../lib/webgl-debug.js"></script>
 		<script src="../lib/cuon-utils.js"></script>
-		<script src="../lib/cuon-matrix-quat.js"></script> <!-- JT modified to add quaternions -->
-		<script src="../lib/glMatrix.js"></script> <!-- SEE: http://glmatrix.net/ fast vector/matrix lib for webGL  -->
+		<script src="../lib/cuon-matrix-quat.js"></script>
+		<script src="../lib/materials_Ayerdi.js"></script>
+		<script src="../lib/glMatrix.js"></script>
 
+		<script src="Util.js"></script>
+		<script src="ArrayBuffer.js"></script>
+		<script src="BasicShape.js"></script>
+		<script src="SceneManager.js"></script>
+		<script src="Shader.js"></script>
 		<script src="CRay.js"></script>
 		<script src="CHit.js"></script>
 		<script src="CCamera.js"></script>
@@ -25,8 +25,11 @@
 		<script src="CMatl.js"></script>
 		<script src="CLight.js"></script>
 		<script src="CScene.js"></script>
-		<script src="canvas.js"></script>
-		<script src="util.js"></script>
+		<script src="RayTrace.js"></script>
+	</head>
+	<body onload="main()" onresize="browserResize()">
+		<canvas id="webgl" width="512" height="512" style="top:0px;position:absolute;"></canvas>
+		<canvas id="raytracing" width="512" height="512" style="position:absolute; margin-left: 512px;top: 0px;"></canvas>
 
 		<div id="lighting_panel" style="position: absolute;top: 512px;">
 			lamp 0 position
